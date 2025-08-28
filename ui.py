@@ -40,8 +40,11 @@ if prompt := st.chat_input("What is up?"):
         # Send POST request
         response = requests.post("http://localhost:8080/v1/query", json=payload)
         response.raise_for_status()
-        assistant_reply = response.json().get("response", "Sorry, no response received.")
-
+        response_data = response.json()
+        assistant_reply = response_data.get("response", "Sorry, no response received.")
+        st.session_state.conversation_id = response_data.get(
+                "conversation_id",
+                st.session_state.conversation_id)
     except requests.exceptions.RequestException as e:
         assistant_reply = f"Error: {e}"
 
